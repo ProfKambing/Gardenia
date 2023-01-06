@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "me.kambing.gardenia.injection",
+  "refmap": "mixins.gardenia.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "MixinAbstractClientPlayer"
+  ]
+}

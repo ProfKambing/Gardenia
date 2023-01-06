@@ -1,0 +1,16 @@
+[
+{
+  "modid": "Gardenia",
+  "name": "Gardenia",
+  "description": "Minecraft ghost client",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "13",
+  "updateUrl": "",
+  "authorList": ["kambing"],
+  "credits": "sexMOD",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
