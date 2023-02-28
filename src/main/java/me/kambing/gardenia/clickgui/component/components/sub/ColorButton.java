@@ -17,8 +17,8 @@ import java.awt.*;
 public class ColorButton extends Component {
 
     private boolean hovered;
-    private Setting op;
-    private Button parent;
+    private final Setting op;
+    private final Button parent;
     private int offset;
     private int x;
     private int y;
@@ -63,10 +63,7 @@ public class ColorButton extends Component {
     }
 
     public boolean isMouseOnButton(int x, int y) {
-        if(x > this.x && x < this.x + 120 && y > this.y && y < this.y + 18) {
-            return true;
-        }
-        return false;
+        return x > this.x && x < this.x + 120 && y > this.y && y < this.y + 18;
     }
 }
 

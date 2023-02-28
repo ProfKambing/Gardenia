@@ -7,11 +7,11 @@ import me.kambing.gardenia.settings.Setting;
 import me.kambing.gardenia.utils.TimeUtil;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
 
-import static me.kambing.gardenia.utils.EntityUtil.isTeam;
 import static me.kambing.gardenia.utils.TimeUtil.getCurrentMS;
 
 public class STap extends Module {
@@ -76,5 +76,28 @@ public class STap extends Module {
     public void onDisabled() {
         super.onDisabled();
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindBack.getKeyCode(), false);
+    }
+    public static boolean isTeam(final EntityPlayer e, final Entity ep) {
+        if (ep instanceof EntityPlayer && ((EntityPlayer)ep).getTeam() != null && e.getTeam() != null) {
+            final Character target = ep.getDisplayName().getFormattedText().charAt(3);
+            final Character player = e.getDisplayName().getFormattedText().charAt(3);
+            final Character target2 = ep.getDisplayName().getFormattedText().charAt(2);
+            final Character player2 = e.getDisplayName().getFormattedText().charAt(2);
+            boolean isTeam = false;
+            if (target.equals(player) && target2.equals(player2)) {
+                isTeam = true;
+            }
+            else {
+                final Character target3 = ep.getDisplayName().getFormattedText().charAt(1);
+                final Character player3 = e.getDisplayName().getFormattedText().charAt(1);
+                final Character target4 = ep.getDisplayName().getFormattedText().charAt(0);
+                final Character player4 = e.getDisplayName().getFormattedText().charAt(0);
+                if (target3.equals(player3) && Character.isDigit(0) && target4.equals(player4)) {
+                    isTeam = true;
+                }
+            }
+            return isTeam;
+        }
+        return true;
     }
 }

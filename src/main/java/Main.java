@@ -7,6 +7,5 @@ public class Main {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
         Gardenia.instance = new Gardenia();
-        Gardenia.instance.init();
     }
 }

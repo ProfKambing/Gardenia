@@ -23,9 +23,9 @@ public class Button extends Component {
     public Frame parent;
     public int offset;
     private boolean isHovered;
-    private ArrayList<Component> subcomponents;
+    private final ArrayList<Component> subcomponents;
     public boolean open;
-    private int height;
+    private final int height;
 
     public Button(Module mod, Frame parent, int offset) {
         this.mod = mod;
@@ -140,9 +140,6 @@ public class Button extends Component {
     }
 
     public boolean isMouseOnButton(int x, int y) {
-        if (x > parent.getX() && x < parent.getX() + parent.getWidth() && y > this.parent.getY() + this.offset && y < this.parent.getY() + 18 + this.offset) {
-            return true;
-        }
-        return false;
+        return x > parent.getX() && x < parent.getX() + parent.getWidth() && y > this.parent.getY() + this.offset && y < this.parent.getY() + 18 + this.offset;
     }
 }

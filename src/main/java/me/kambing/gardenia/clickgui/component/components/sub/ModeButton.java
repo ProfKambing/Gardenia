@@ -18,12 +18,12 @@ import java.awt.*;
 public class ModeButton extends Component {
 
 	private boolean hovered;
-	private Button parent;
-	private Setting set;
+	private final Button parent;
+	private final Setting set;
 	private int offset;
 	private int x;
 	private int y;
-	private Module mod;
+	private final Module mod;
 
 	private int modeIndex;
 	
@@ -74,9 +74,6 @@ public class ModeButton extends Component {
 	}
 	
 	public boolean isMouseOnButton(int x, int y) {
-		if(x > this.x && x < this.x + 120 && y > this.y && y < this.y + 18) {
-			return true;
-		}
-		return false;
-	}
+        return x > this.x && x < this.x + 120 && y > this.y && y < this.y + 18;
+    }
 }

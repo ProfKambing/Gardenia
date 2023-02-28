@@ -1,5 +1,6 @@
 package me.kambing.gardenia;
 
+import com.google.common.eventbus.EventBus;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import me.kambing.gardenia.clickgui.ClickGui;
 import me.kambing.gardenia.command.CommandManager;
@@ -13,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
@@ -22,10 +24,12 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import static me.kambing.gardenia.Agent.isAnInjection;
+
 public class Gardenia
 {
-    public static final String MODID = "Gardenia";
-    public static final String VERSION = "v2.0";
+    public static final String MODID = "Gardenia+";
+    public static final String VERSION = "b0.1";
     public static String prefix = ".";
 
     public static Gardenia instance;
@@ -35,18 +39,23 @@ public class Gardenia
     public ClickGui clickGui;
     public SaveLoad saveLoad;
     public CommandManager commandManager;
+    public static final EventBus eventBus = new EventBus(); // use this
     public ArrayList<EntityPlayer> bots = new ArrayList<EntityPlayer>();
     private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
+    public static boolean state = false;
 
     public boolean destructed = false;
     List<String> arrayList = new ArrayList<>();
 
-    public void init() {
+    public Gardenia() {
         // following 5 lines must be in this order or java has a stroke and dies
-
+        if (state) return;
+        state = true;
         MinecraftForge.EVENT_BUS.register(this);
+        if (isAnInjection) {
+            FMLCommonHandler.instance().bus().register(this);
+        }
         instance = this;
-
         settingsManager = new SettingsManager();
         moduleManager = new ModuleManager();
         saveLoad = new SaveLoad();

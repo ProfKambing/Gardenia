@@ -32,7 +32,7 @@ public class DiscordRP {
                 while(running) {
                     DiscordRPC.discordRunCallbacks();
                 }
-            };
+            }
         }.start();
     }
 

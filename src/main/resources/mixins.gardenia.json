@@ -4,8 +4,11 @@
   "refmap": "mixins.gardenia.refmap.json",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinAbstractClientPlayer",
+    "MixinEntity",
+    "MixinNetworkManager"
   ],
   "client": [
-    "MixinAbstractClientPlayer"
+    "MixinEntityPlayerSP"
   ]
 }

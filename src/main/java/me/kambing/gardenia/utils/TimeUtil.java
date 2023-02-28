@@ -59,10 +59,7 @@ public class TimeUtil {
         private long lastTime = System.currentTimeMillis();
 
         public boolean hasReached(long time) {
-            if(System.currentTimeMillis() - lastTime >= time) {
-                return true;
-            }
-            return false;
+            return System.currentTimeMillis() - lastTime >= time;
         }
 
         public long getTimeElapsed() {

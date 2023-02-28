@@ -13,9 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SaveLoad {
-    private File dir;
+    private final File dir;
     private File dataFile;
-    private String extension, fileName;
+    private final String extension;
+    private String fileName;
 
     public SaveLoad() {
         dir = new File(Minecraft.getMinecraft().mcDataDir, Gardenia.MODID.toLowerCase());

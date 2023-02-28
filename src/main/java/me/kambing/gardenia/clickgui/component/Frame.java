@@ -21,10 +21,10 @@ public class Frame {
 	public ArrayList<Component> components;
 	public Category category;
 	private boolean open;
-	private int width;
+	private final int width;
 	private int y;
 	private int x;
-	private int barHeight;
+	private final int barHeight;
 	private boolean isDragging;
 	public int dragX;
 	public int dragY;
@@ -130,10 +130,7 @@ public class Frame {
 	}
 	
 	public boolean isWithinHeader(int x, int y) {
-		if(x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.barHeight) {
-			return true;
-		}
-		return false;
-	}
+        return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.barHeight;
+    }
 	
 }

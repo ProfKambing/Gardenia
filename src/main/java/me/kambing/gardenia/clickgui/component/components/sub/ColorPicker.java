@@ -33,6 +33,7 @@ public class ColorPicker extends GuiScreen {
     private boolean rainbowState = false;
     private boolean pickingCopy;
     private boolean pickingPaste;
+    private boolean pickingSync;
 
     public ColorPicker(Setting setting) {
         float[] settingColor = Color.RGBtoHSB(setting.getColor().getRed(), setting.getColor().getGreen(), setting.getColor().getBlue(), null);
@@ -62,7 +63,7 @@ public class ColorPicker extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         pickingCopy = (check(pickerX,pickerY + 120, pickerX + mc.fontRendererObj.getStringWidth("Copy"), pickerY + 120 + mc.fontRendererObj.FONT_HEIGHT, mouseX,mouseY));
         pickingPaste = check(pickerX + 30,pickerY + 120, pickerX + mc.fontRendererObj.getStringWidth("Paste") + 30, pickerY + 120 + mc.fontRendererObj.FONT_HEIGHT, mouseX,mouseY);
-
+        pickingSync = check(pickerX + 90,pickerY + 120, pickerX + mc.fontRendererObj.getStringWidth("Sync") + 90, pickerY + 120 + mc.fontRendererObj.FONT_HEIGHT, mouseX,mouseY);
         drawDefaultBackground();
         if (rainbowState) {
             double rainbowState = Math.ceil((System.currentTimeMillis() + 200) / 20.0);
@@ -121,14 +122,17 @@ public class ColorPicker extends GuiScreen {
             Gui.drawRect(cursorX - 2, cursorY - 2, cursorX + 2, cursorY + 2, -1);
         }
         setting.setColor(urmom(new Color(Color.HSBtoRGB(color[0], color[1], color[2])), color[3]));
-//        for (int i = 1; i < pickerHeight/10; i++) {
-//            Gui.drawRect(selectedX - 2, pickerY + i * 14, selectedX + 12, pickerY + i * 14, 0xFC000000);
-//        }
+       for (int i = 1; i < pickerHeight/10; i++) {
+            Gui.drawRect(selectedX - 2, pickerY + i * 14, selectedX + 12, pickerY + i * 14, 0xFC000000);
+        }
         if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
             setting.setOpen(false);
         }
         Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(pickingCopy ? ChatFormatting.UNDERLINE  + "Copy" : "Copy", pickerX, pickerY + 120, -1);
         Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(pickingPaste ? ChatFormatting.UNDERLINE + "Paste" : "Paste", pickerX + 30, pickerY + 120, -1);
+        if (!setting.getParentMod().getName().equals("Color")) {
+            Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(pickingSync ? ChatFormatting.UNDERLINE + "Sync" : "Sync", pickerX + 90, pickerY + 120, RenderUtil.syncColor().getRGB());
+        }
     }
 
     final int alpha(Color color, float alpha) {
@@ -169,6 +173,12 @@ public class ColorPicker extends GuiScreen {
                 } else {
                     MessageUtil.sendMessage("The color your pasting is not a hex-type color.");
                 }
+            }
+            if (check(pickerX + 90,pickerY + 120, pickerX + mc.fontRendererObj.getStringWidth("Sync") + 90, pickerY + 120 + mc.fontRendererObj.FONT_HEIGHT, mouseX,mouseY)) {
+                //sync
+                Color color1 = RenderUtil.syncColor();
+                float[] decodedColor = Color.RGBtoHSB(color1.getRed(), color1.getGreen(), color1.getBlue(), null);
+                color = new float[]{decodedColor[0], decodedColor[1], decodedColor[2], color1.getAlpha() / 255.0f};
             }
         }
         if (!isInsideBox(mouseX, mouseY)) {

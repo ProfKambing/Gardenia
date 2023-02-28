@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityUtil {
-    private static Minecraft mc = Minecraft.getMinecraft();
+    private static final Minecraft mc = Minecraft.getMinecraft();
 
     public static List<EntityLivingBase> getTargets(long reach) {
         List<EntityLivingBase> targets = new ArrayList<EntityLivingBase>();

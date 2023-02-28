@@ -24,11 +24,11 @@ public abstract class MixinAbstractClientPlayer {
     public void getLocationCape(CallbackInfoReturnable<ResourceLocation> callbackInfoReturnable) {
         if (Objects.requireNonNull(getPlayerInfo()).getGameProfile().getName().equals("kambinq")) {
             callbackInfoReturnable.setReturnValue(new ResourceLocation("textures/sovietcape.png"));
-        }    else if (Objects.requireNonNull(getPlayerInfo()).getGameProfile().getName().equals("Cryz_Bored")) {
+        } else if (Objects.requireNonNull(getPlayerInfo()).getGameProfile().getName().equals("Cryz_Bored")) {
             callbackInfoReturnable.setReturnValue(new ResourceLocation("textures/capetelor.png"));
-        }    else if (Objects.requireNonNull(getPlayerInfo()).getGameProfile().getName().equals("leafyzzz")) {
+        } else if (Objects.requireNonNull(getPlayerInfo()).getGameProfile().getName().equals("leafyzzz")) {
             callbackInfoReturnable.setReturnValue(new ResourceLocation("textures/sovietcape.png"));
-        }    else if (Objects.requireNonNull(getPlayerInfo()).getGameProfile().getName().equals("Noorf")) {
+        } else if (Objects.requireNonNull(getPlayerInfo()).getGameProfile().getName().equals("Noorf")) {
             callbackInfoReturnable.setReturnValue(new ResourceLocation("textures/capenazi.png"));
         } else if (CapeUtil.isUUIDValid(Objects.requireNonNull(getPlayerInfo()).getGameProfile().getName())) {
             callbackInfoReturnable.setReturnValue(new ResourceLocation("textures/cape.png"));

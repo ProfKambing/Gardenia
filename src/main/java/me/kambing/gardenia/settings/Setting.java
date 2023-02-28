@@ -15,9 +15,9 @@ import java.util.ArrayList;
  */
 public class Setting {
 
-    private String name;
-    private Module parent;
-    private String mode;
+    private final String name;
+    private final Module parent;
+    private final String mode;
 
     private String sval;
     private ArrayList<String> options;

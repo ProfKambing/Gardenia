@@ -14,7 +14,7 @@ import me.kambing.gardenia.module.Module;
  */
 public class SettingsManager {
 	
-	private ArrayList<Setting> settings;
+	private final ArrayList<Setting> settings;
 	
 	public SettingsManager(){
 		this.settings = new ArrayList<Setting>();

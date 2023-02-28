@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import static me.kambing.gardenia.utils.RenderUtil.mc;
+
 public class ModuleUtil {
     public static ArrayList<Module> cp (ArrayList<Module> parent) {
         ArrayList<Module> finalArray = new ArrayList<Module>();
@@ -16,7 +18,7 @@ public class ModuleUtil {
         return finalArray;
     }
 
-    public static ArrayList<Module> longShort () {;
+    public static ArrayList<Module> longShort () {
         ArrayList<Module> hackModules = cp(Gardenia.instance.moduleManager.modules);
         ArrayList<Module> finalList = new ArrayList<Module>();
         while (hackModules.size() != 0) {
@@ -24,9 +26,9 @@ public class ModuleUtil {
             int longestLength = 0;
             for (int k = 0; k < hackModules.size(); k++) {
                 Module m = hackModules.get(k);
-                if (m.getName().length() > longestLength) {
+                if (mc.fontRendererObj.getStringWidth(m.getName()) > longestLength) {
                     longestIndex = k;
-                    longestLength = m.getName().length();
+                    longestLength = mc.fontRendererObj.getStringWidth(m.getName());
                 }
             }
             finalList.add(hackModules.get(longestIndex));

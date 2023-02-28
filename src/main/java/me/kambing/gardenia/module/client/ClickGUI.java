@@ -7,7 +7,7 @@ import me.kambing.gardenia.settings.Setting;
 import me.kambing.gardenia.utils.RenderUtil;
 import org.lwjgl.input.Keyboard;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 
 public class ClickGUI extends Module {
@@ -18,7 +18,7 @@ public class ClickGUI extends Module {
         colorSetting.add("Rainbow");
         colorSetting.add("Alphastep");
         new Setting("Color", this, "Alphastep", colorSetting);
-        new Setting("GUIColor", this, Color.ORANGE);
+        new Setting("GUIColor", this, Color.PINK);
         new Setting("BackgroundAlpha", this, 58, 0, 200, true);
         new Setting("RainbowSpeed", this, 40, 0, 100, true);
         //new Setting("test", this, 40, 0, 100, true);

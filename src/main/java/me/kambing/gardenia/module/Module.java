@@ -4,15 +4,21 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import me.kambing.gardenia.Gardenia;
 import me.kambing.gardenia.settings.Setting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.Packet;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import static me.kambing.gardenia.Agent.isAnInjection;
 
 public class Module {
     protected static Minecraft mc = Minecraft.getMinecraft();
 
-    private String name, description;
+    private final String name;
+    private String description;
     private int key;
-    private boolean detectable, toggled;
+    private final boolean detectable;
+    private boolean toggled;
     public Category category;
     public boolean visible = true;
 
@@ -92,12 +98,21 @@ public class Module {
         if (mc.thePlayer != null && !name.equals("ClickGUI"))
             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(ChatFormatting.GRAY + "[" + ChatFormatting.GOLD + "Gardenia" + ChatFormatting.GRAY + "] " + ChatFormatting.RESET + this.getName() + " has been" + ChatFormatting.GREEN + " enabled"));
         MinecraftForge.EVENT_BUS.register(this);
+        if (isAnInjection) {
+            FMLCommonHandler.instance().bus().register(this);
+        }
     }
 
     public void onDisabled(){
         if (mc.thePlayer != null && !name.equals("ClickGUI"))
         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(ChatFormatting.GRAY + "[" + ChatFormatting.GOLD + "Gardenia" + ChatFormatting.GRAY + "] " + ChatFormatting.RESET + this.getName() +  " has been" + ChatFormatting.RED + " disabled"));
         MinecraftForge.EVENT_BUS.unregister(this);
+        if (isAnInjection) {
+            FMLCommonHandler.instance().bus().unregister(this);
+        }
+    }
+    public void onPacketReceived(Packet<?> packet) {
+
     }
 
     @Override

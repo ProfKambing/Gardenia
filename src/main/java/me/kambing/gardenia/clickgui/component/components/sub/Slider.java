@@ -22,8 +22,8 @@ public class Slider extends Component {
 
 	private boolean hovered;
 
-	private Setting set;
-	private Button parent;
+	private final Setting set;
+	private final Button parent;
 	private int offset;
 	private int x;
 	private int y;
@@ -106,16 +106,10 @@ public class Slider extends Component {
 	}
 	
 	public boolean isMouseOnButtonD(int x, int y) {
-		if(x > this.x && x < this.x + (parent.parent.getWidth() / 2 + 1) && y > this.y && y < this.y + 18) {
-			return true;
-		}
-		return false;
+		return x > this.x && x < this.x + (parent.parent.getWidth() / 2 + 1) && y > this.y && y < this.y + 18;
 	}
 	
 	public boolean isMouseOnButtonI(int x, int y) {
-		if(x > this.x + parent.parent.getWidth() / 2 && x < this.x + parent.parent.getWidth() && y > this.y && y < this.y + 18) {
-			return true;
-		}
-		return false;
+		return x > this.x + parent.parent.getWidth() / 2 && x < this.x + parent.parent.getWidth() && y > this.y && y < this.y + 18;
 	}
 }

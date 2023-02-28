@@ -1,11 +1,15 @@
 package me.kambing.gardenia.module;
 
+import me.kambing.gardenia.Gardenia;
+import me.kambing.gardenia.module.client.targethud.TargetHUD;
 import me.kambing.gardenia.module.combat.*;
 import me.kambing.gardenia.module.misc.*;
 import me.kambing.gardenia.module.movement.*;
 import me.kambing.gardenia.module.player.*;
 import me.kambing.gardenia.module.client.*;
 import me.kambing.gardenia.module.render.*;
+import me.kambing.gardenia.module.render.deatheffects.DeathEffects;
+import net.minecraft.network.Packet;
 
 import java.util.ArrayList;
 
@@ -14,6 +18,11 @@ public class ModuleManager {
     public ClickGUI clickGUI;
     public HUD hud;
     public StaffAnalyzer staffAnalyzer;
+    public LegitAura legitAura;
+    public Color color;
+    public TwoDESP twoDESP;
+    public DeathEffects deathEffects;
+    public BedBreaker bedBreaker;
 
     public ModuleManager(){
         (modules = new ArrayList<Module>()).clear();
@@ -34,7 +43,20 @@ public class ModuleManager {
         this.modules.add(new AutoHeader());
         this.modules.add(new HoldClicker());
         this.modules.add(new AimAssist());
+        this.modules.add(new Scaffold());
         this.modules.add(staffAnalyzer = new StaffAnalyzer());
+        this.modules.add(twoDESP = new TwoDESP());
+        this.modules.add(new Velocity());
+        this.modules.add(legitAura = new LegitAura());
+        this.modules.add(new TargetHUD());
+        this.modules.add(color = new Color());
+        this.modules.add(deathEffects = new DeathEffects());
+        this.modules.add(bedBreaker = new BedBreaker());
+        this.modules.add(new ScaffoldRewrite());
+        //this.modules.add(new AutoClicker());
+        for (Module m : this.modules) {
+            Gardenia.eventBus.register(m);
+        }
     }
 
     public Module getModule(String name) {
@@ -58,6 +80,12 @@ public class ModuleManager {
             }
         }
         return mods;
+    }
+
+    public void receivePacketToAllModules(Packet<?> packet) {
+        for (Module m : this.modules) {
+            m.onPacketReceived(packet);
+        }
     }
 
     public void addModule(Module m){

@@ -22,17 +22,28 @@ public class BlockClutch extends Module {
         super("BlockClutch", "Block Clutches you", false, false, Category.Player);
         new Setting("Range", this, 4, 0, 10, false);
         new Setting("AutoSwitch", this, true);
+        new Setting("RotateNew", this, false);
     }
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent e) {
-        this.placeBlock((int) getSetting( "Range").getValDouble(), true);
+        if (getSetting("RotateNew").getValBoolean()) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+                float[] angles = doScaffoldRotations(new Vec3(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1.0D, mc.thePlayer.posZ)));
+                mc.thePlayer.rotationYawHead = angles[1];
+                mc.thePlayer.rotationPitch = angles[1];
+                mc.thePlayer.renderYawOffset = angles[1];
+                placeBlock((int) getSetting("Range").getValDouble(), true);
+            }
+        } else {
+            placeBlock((int) getSetting("Range").getValDouble(), true);
+        }
     }
     public void placeBlock(final int range, final boolean place) {
-        if (this.isAirBlock(getBlock(new BlockPos(mc.thePlayer).down()))) {
+        if (isAirBlock(getBlock(new BlockPos(mc.thePlayer).down()))) {
             return;
         }
-        if (this.placeBlockSimple(new BlockPos(mc.thePlayer).down(), place)) {
+        if (placeBlockSimple(new BlockPos(mc.thePlayer).down(), place, getSetting("AutoSwitch").getValBoolean(), getSetting("RotateNew").getValBoolean())) {
             return;
         }
         int dist = 0;
@@ -41,16 +52,16 @@ public class BlockClutch extends Module {
                 for (int x = blockDist; x >= 0; --x) {
                     final int z = blockDist - x;
                     final int y = dist - blockDist;
-                    if (this.placeBlockSimple(new BlockPos(mc.thePlayer).down(y).north(x).west(z), place)) {
+                    if (placeBlockSimple(new BlockPos(mc.thePlayer).down(y).north(x).west(z), place, getSetting("AutoSwitch").getValBoolean(), getSetting("RotateNew").getValBoolean())) {
                         return;
                     }
-                    if (this.placeBlockSimple(new BlockPos(mc.thePlayer).down(y).north(x).west(-z), place)) {
+                    if (placeBlockSimple(new BlockPos(mc.thePlayer).down(y).north(x).west(-z), place, getSetting("AutoSwitch").getValBoolean(), getSetting("RotateNew").getValBoolean())) {
                         return;
                     }
-                    if (this.placeBlockSimple(new BlockPos(mc.thePlayer).down(y).north(-x).west(z), place)) {
+                    if (placeBlockSimple(new BlockPos(mc.thePlayer).down(y).north(-x).west(z), place, getSetting("AutoSwitch").getValBoolean(), getSetting("RotateNew").getValBoolean())) {
                         return;
                     }
-                    if (this.placeBlockSimple(new BlockPos(mc.thePlayer).down(y).north(-x).west(-z), place)) {
+                    if (placeBlockSimple(new BlockPos(mc.thePlayer).down(y).north(-x).west(-z), place, getSetting("AutoSwitch").getValBoolean(), getSetting("RotateNew").getValBoolean())) {
                         return;
                     }
                 }
@@ -63,9 +74,9 @@ public class BlockClutch extends Module {
         return !block.getMaterial().isReplaceable() || (block instanceof BlockSnow && !(block.getBlockBoundsMaxY() <= 0.125));
     }
 
-    public boolean placeBlockSimple(final BlockPos pos, final boolean place) {
-        if (!this.doesSlotHaveBlocks(mc.thePlayer.inventory.currentItem) && getSetting("AutoSwitch").getValBoolean()) {
-            mc.thePlayer.inventory.currentItem = this.getFirstHotBarSlotWithBlocks();
+    public static boolean placeBlockSimple(final BlockPos pos, final boolean place, boolean autoSwitch, boolean scaffold) {
+        if (!doesSlotHaveBlocks(mc.thePlayer.inventory.currentItem) && autoSwitch) {
+            mc.thePlayer.inventory.currentItem = getFirstHotBarSlotWithBlocks();
         }
         final Minecraft mc = Minecraft.getMinecraft();
         final Entity entity = mc.getRenderViewEntity();
@@ -81,12 +92,19 @@ public class BlockClutch extends Module {
                     if (getBlock(neighbor).canCollideCheck(mc.theWorld.getBlockState(neighbor), false)) {
                         final Vec3 hitVec = new Vec3(neighbor).addVector(0.5, 0.5, 0.5).add(new Vec3(side2.getDirectionVec()));
                         if (eyesPos.squareDistanceTo(hitVec) <= 36.0) {
-                            final float[] angles = this.getRotations(neighbor, side2);
-                            mc.getRenderViewEntity().rotationYaw = angles[0];
-                            mc.getRenderViewEntity().rotationPitch = angles[1];
+                            float[] angles;
+                            if (!scaffold) {
+                                angles  = getRotations(neighbor, side2);
+                            } else {
+                                angles = doScaffoldRotations(new Vec3(pos));
+                            }
+                            //mc.getRenderViewEntity().rotationYaw = angles[1];
+                            //mc.getRenderViewEntity().rotationPitch = angles[1];
+
                             if (place) {
-                                mc.thePlayer.rotationYaw = angles[0];
+                                mc.thePlayer.rotationYawHead = angles[1];
                                 mc.thePlayer.rotationPitch = angles[1];
+                                mc.thePlayer.renderYawOffset = angles[1];
                                 mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem(), neighbor, side2, hitVec);
                                 mc.thePlayer.swingItem();
                             }
@@ -103,7 +121,7 @@ public class BlockClutch extends Module {
         return Minecraft.getMinecraft().theWorld.getBlockState(pos).getBlock();
     }
 
-    public float[] getRotations(final BlockPos block, final EnumFacing face) {
+    public static float[] getRotations(final BlockPos block, final EnumFacing face) {
         final Entity entity = mc.getRenderViewEntity();
         final double posX = entity.posX;
         final double posY = entity.posY;
@@ -121,7 +139,7 @@ public class BlockClutch extends Module {
         return new float[] { yaw, pitch };
     }
 
-    public int getFirstHotBarSlotWithBlocks() {
+    public static int getFirstHotBarSlotWithBlocks() {
         for (int i = 0; i < 9; ++i) {
             if (mc.thePlayer.inventory.getStackInSlot(i) != null && mc.thePlayer.inventory.getStackInSlot(i).getItem() instanceof ItemBlock) {
                 if (mc.thePlayer.inventory.getStackInSlot(i).getItem().equals(ItemBlock.getItemFromBlock(Blocks.tnt))) continue;
@@ -130,8 +148,22 @@ public class BlockClutch extends Module {
         }
         return 0;
     }
-    public boolean doesSlotHaveBlocks(final int slotToCheck) {
+    public static boolean doesSlotHaveBlocks(final int slotToCheck) {
         return mc.thePlayer.inventory.getStackInSlot(slotToCheck) != null && mc.thePlayer.inventory.getStackInSlot(slotToCheck).getItem() instanceof ItemBlock && mc.thePlayer.inventory.getStackInSlot(slotToCheck).stackSize > 0;
+    }
+
+    public static float[] doScaffoldRotations(Vec3 vec) {
+        double diffX = vec.xCoord - mc.thePlayer.posX;
+        double diffY = vec.yCoord - (mc.thePlayer.getEntityBoundingBox().minY);
+        double diffZ = vec.zCoord - mc.thePlayer.posZ;
+        double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
+        float yaw = (float) (Math.toDegrees(Math.atan2(diffZ, diffX)));
+        float pitch = (float) -Math.toDegrees(Math.atan2(diffY, dist));
+        return new float[] {
+                mc.thePlayer.rotationYaw
+                        + MathHelper.wrapAngleTo180_float(yaw - mc.thePlayer.rotationYaw),
+                mc.thePlayer.rotationPitch
+                        + MathHelper.wrapAngleTo180_float(pitch - mc.thePlayer.rotationPitch) };
     }
 
 }
