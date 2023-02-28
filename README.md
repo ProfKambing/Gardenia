@@ -1,5 +1,11 @@
 # Gardenia
-lightweight Feather (forge) compatible ghost client
+lightweight Feather (forge) compatible ghost client for Hypixel
+
+- bypassing features (on hypixel):
+- bedbreaker
+- legitaura
+- scaffoldrewrite, stopsprint, speed 0.95
+
 [Base for Client](https://github.com/Kopamed/Galacticc)
 
 # GUI pic
